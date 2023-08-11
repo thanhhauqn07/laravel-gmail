@@ -10,6 +10,7 @@ use Google_Service_Gmail_WatchRequest;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class GmailConnection extends Google_Client
 {
@@ -31,7 +32,7 @@ class GmailConnection extends Google_Client
 	{
 		$this->app = Container::getInstance();
 
-		$this->userId = $userId;
+        $this->userId = Str::of($userId)->lower()->replaceMatches('/[@.]+/','');
 
 		$this->configConstruct($config);
 
@@ -195,6 +196,10 @@ class GmailConnection extends Google_Client
 					if (property_exists($me, 'emailAddress')) {
 						$this->emailAddress = $me->emailAddress;
 						$accessToken['email'] = $me->emailAddress;
+
+                        if($this->_config['gmail.allow_multiple_credentials'] === true) {
+                            $this->userId = Str::of($this->emailAddress)->lower()->replaceMatches('/[@.]+/','');;
+                        }
 					}
 				}
 				$this->setBothAccessToken($accessToken);

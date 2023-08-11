@@ -197,9 +197,9 @@ class GmailConnection extends Google_Client
 						$this->emailAddress = $me->emailAddress;
 						$accessToken['email'] = $me->emailAddress;
 
-                        if($this->_config['gmail.allow_multiple_credentials'] === true) {
-                            $this->userId = Str::of($this->emailAddress)->lower()->replaceMatches('/[@.]+/','');;
-                        }
+            if($this->_config['gmail.allow_multiple_credentials'] === true) {
+                $this->userId = Str::of($this->emailAddress)->lower()->replaceMatches('/[@.]+/','');;
+            }
 					}
 				}
 				$this->setBothAccessToken($accessToken);
